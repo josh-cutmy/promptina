@@ -17,14 +17,9 @@ function Home() {
   const [editingItem, setEditingItem] = useState<Item | null>(null)
   const router = useRouter()
   
+  // All hooks must be called before any conditional logic
   const { user, loading: authLoading } = useAuth()
   const { data: items = [], isLoading } = useItems()
-
-  // Redirect to login if not authenticated
-  if (!authLoading && !user) {
-    router.push('/login')
-    return null
-  }
   const createItem = useCreateItem()
   const updateItem = useUpdateItem()
   const deleteItem = useDeleteItem()
@@ -39,6 +34,12 @@ function Home() {
     prompt: items.filter(item => item.type === 'prompt').length,
     rule: items.filter(item => item.type === 'rule').length,
   }), [items])
+
+  // Redirect to login if not authenticated (after all hooks)
+  if (!authLoading && !user) {
+    router.push('/login')
+    return null
+  }
 
   const handleSave = async (content: string, type: ItemType) => {
     if (editingItem) {

@@ -21,6 +21,15 @@ export const createClient = (request: NextRequest) => {
             request.cookies.set(name, value)
             response.cookies.set(name, value, options)
           })
+          // Update response to include new cookies
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          })
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options)
+          })
         },
       },
     }
