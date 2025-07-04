@@ -2,15 +2,16 @@
 
 import { useState } from 'react'
 import { Item } from '@/lib/types'
-import { Copy, Edit, Trash2, Check } from 'lucide-react'
+import { Copy, Edit, Trash2, Check, Share2 } from 'lucide-react'
 
 interface ItemCardProps {
   item: Item
   onEdit: (item: Item) => void
   onDelete: (id: string) => void
+  onShare: (item: Item) => void
 }
 
-export default function ItemCard({ item, onEdit, onDelete }: ItemCardProps) {
+export default function ItemCard({ item, onEdit, onDelete, onShare }: ItemCardProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -52,6 +53,14 @@ export default function ItemCard({ item, onEdit, onDelete }: ItemCardProps) {
             title="Copy to clipboard"
           >
             {copied ? <Check size={18} /> : <Copy size={18} />}
+          </button>
+          
+          <button
+            onClick={() => onShare(item)}
+            className="p-2 text-gray-600 hover:text-green-700 hover:bg-green-100 border border-gray-300 hover:border-green-400 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
+            title="Share"
+          >
+            <Share2 size={18} />
           </button>
           
           <button

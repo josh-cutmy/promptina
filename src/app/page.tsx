@@ -9,12 +9,15 @@ import Header from '@/components/Header'
 import FilterTabs from '@/components/FilterTabs'
 import ItemCard from '@/components/ItemCard'
 import ItemModal from '@/components/ItemModal'
+import ShareModal from '@/components/ShareModal'
 import FloatingActionButton from '@/components/FloatingActionButton'
 
 function Home() {
   const [activeFilter, setActiveFilter] = useState<'all' | ItemType>('all')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<Item | null>(null)
+  const [sharingItem, setSharingItem] = useState<Item | null>(null)
   const router = useRouter()
   
   // All hooks must be called before any conditional logic
@@ -72,6 +75,16 @@ function Home() {
     setEditingItem(null)
   }
 
+  const handleShare = (item: Item) => {
+    setSharingItem(item)
+    setIsShareModalOpen(true)
+  }
+
+  const handleCloseShareModal = () => {
+    setIsShareModalOpen(false)
+    setSharingItem(null)
+  }
+
   if (authLoading || isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -118,6 +131,7 @@ function Home() {
                 item={item}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                onShare={handleShare}
               />
             ))}
           </div>
@@ -131,6 +145,12 @@ function Home() {
         onClose={handleCloseModal}
         onSave={handleSave}
         item={editingItem}
+      />
+
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={handleCloseShareModal}
+        item={sharingItem}
       />
     </div>
   )
