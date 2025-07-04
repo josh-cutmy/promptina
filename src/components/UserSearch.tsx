@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { UserProfile } from '@/lib/types'
-import { useSearchUsers } from '@/hooks/useUsers'
+import { useSearchUsers, useUsers } from '@/hooks/useUsers'
 import { Search, X, User } from 'lucide-react'
 
 interface UserSearchProps {
@@ -24,9 +24,15 @@ export default function UserSearch({
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const { data: searchResults = [], isLoading } = useSearchUsers(searchTerm)
+  const { data: allUsers = [] } = useUsers()
+  
+  console.log('UserSearch - searchTerm:', searchTerm, 'searchResults:', searchResults, 'allUsers:', allUsers)
 
+  // Use search results if we have a search term, otherwise use all users for @ mentions
+  const usersToShow = searchTerm.length >= 1 ? searchResults : allUsers
+  
   // Filter out already selected users
-  const filteredResults = searchResults.filter(
+  const filteredResults = usersToShow.filter(
     user => !selectedUsers.some(selected => selected.id === user.id)
   )
 
@@ -48,7 +54,7 @@ export default function UserSearch({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setSearchTerm(value)
-    setShowDropdown(value.length >= 2)
+    setShowDropdown(value.length >= 1)
   }
 
   const handleUserClick = (user: UserProfile) => {
@@ -59,7 +65,7 @@ export default function UserSearch({
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === '@' && searchTerm === '') {
+    if (e.key === '@') {
       setShowDropdown(true)
     }
   }
@@ -97,7 +103,7 @@ export default function UserSearch({
             value={searchTerm}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            onFocus={() => searchTerm.length >= 2 && setShowDropdown(true)}
+            onFocus={() => searchTerm.length >= 1 && setShowDropdown(true)}
             placeholder={placeholder}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
@@ -131,7 +137,7 @@ export default function UserSearch({
                   </div>
                 </button>
               ))
-            ) : searchTerm.length >= 2 ? (
+            ) : searchTerm.length >= 1 ? (
               <div className="px-4 py-2 text-gray-500">No users found</div>
             ) : (
               <div className="px-4 py-2 text-gray-500">Type @ or start typing to search</div>

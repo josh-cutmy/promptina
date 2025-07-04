@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase/client'
 import { UserProfile } from '@/lib/types'
 
@@ -21,19 +21,24 @@ export function useSearchUsers(searchTerm: string) {
   return useQuery({
     queryKey: ['users', 'search', searchTerm],
     queryFn: async () => {
-      if (!searchTerm || searchTerm.length < 2) return []
+      console.log('Searching for:', searchTerm)
+      if (!searchTerm || searchTerm.length < 1) return []
       
       const { data, error } = await supabase
         .from('user_profiles')
         .select('*')
-        .or(`display_name.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%,username.ilike.%${searchTerm}%`)
+        .or(`display_name.ilike.*${searchTerm}*,email.ilike.*${searchTerm}*`)
         .order('display_name')
         .limit(10)
       
-      if (error) throw error
+      console.log('Search results:', data, 'Error:', error)
+      if (error) {
+        console.error('Search error:', error)
+        throw error
+      }
       return data as UserProfile[]
     },
-    enabled: searchTerm.length >= 2,
+    enabled: searchTerm.length >= 1,
   })
 }
 

@@ -68,7 +68,7 @@ export default function ShareModal({ isOpen, onClose, item }: ShareModalProps) {
             <div>
               <h2 className="text-xl font-semibold text-gray-900">Share Item</h2>
               <p className="text-sm text-gray-600">
-                Share "{item.title || 'Untitled'}" with other users
+                Share &quot;{item.title || 'Untitled'}&quot; with other users
               </p>
             </div>
           </div>
