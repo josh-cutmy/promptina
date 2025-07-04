@@ -41,16 +41,17 @@ function Home() {
     return null
   }
 
-  const handleSave = async (content: string, type: ItemType) => {
+  const handleSave = async (title: string, content: string, type: ItemType) => {
     if (editingItem) {
       await updateItem.mutateAsync({
         id: editingItem.id,
+        title,
         content,
         type,
       })
       setEditingItem(null)
     } else {
-      await createItem.mutateAsync({ content, type })
+      await createItem.mutateAsync({ title, content, type })
     }
     setIsModalOpen(false)
   }

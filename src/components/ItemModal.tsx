@@ -7,19 +7,22 @@ import { X } from 'lucide-react'
 interface ItemModalProps {
   isOpen: boolean
   onClose: () => void
-  onSave: (content: string, type: ItemType) => void
+  onSave: (title: string, content: string, type: ItemType) => void
   item?: Item | null
 }
 
 export default function ItemModal({ isOpen, onClose, onSave, item }: ItemModalProps) {
+  const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [type, setType] = useState<ItemType>('prompt')
 
   useEffect(() => {
     if (item) {
+      setTitle(item.title || '')
       setContent(item.content)
       setType(item.type)
     } else {
+      setTitle('')
       setContent('')
       setType('prompt')
     }
@@ -28,7 +31,7 @@ export default function ItemModal({ isOpen, onClose, onSave, item }: ItemModalPr
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (content.trim()) {
-      onSave(content.trim(), type)
+      onSave(title.trim() || 'Untitled', content.trim(), type)
       onClose()
     }
   }
@@ -64,6 +67,20 @@ export default function ItemModal({ isOpen, onClose, onSave, item }: ItemModalPr
               <option value="prompt">Prompt</option>
               <option value="rule">Rule</option>
             </select>
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+              Title
+            </label>
+            <input
+              id="title"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter a title for your prompt..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
           </div>
           
           <div className="mb-6">

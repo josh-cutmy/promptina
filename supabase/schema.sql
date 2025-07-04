@@ -2,6 +2,7 @@
 create table public.items (
   id uuid default gen_random_uuid() primary key,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  title text,
   content text not null,
   type varchar(10) not null check (type in ('prompt', 'rule')),
   user_id uuid references auth.users(id) on delete cascade not null

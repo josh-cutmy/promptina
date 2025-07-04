@@ -28,7 +28,7 @@ export function useCreateItem() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ content, type }: { content: string; type: ItemType }) => {
+    mutationFn: async ({ title, content, type }: { title: string; content: string; type: ItemType }) => {
       // Get the current user
       const { data: { user } } = await supabase.auth.getUser()
       
@@ -38,7 +38,7 @@ export function useCreateItem() {
 
       const { data, error } = await supabase
         .from('items')
-        .insert([{ content, type, user_id: user.id }])
+        .insert([{ title, content, type, user_id: user.id }])
         .select()
         .single()
       
@@ -55,10 +55,10 @@ export function useUpdateItem() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ id, content, type }: { id: string; content: string; type: ItemType }) => {
+    mutationFn: async ({ id, title, content, type }: { id: string; title: string; content: string; type: ItemType }) => {
       const { data, error } = await supabase
         .from('items')
-        .update({ content, type })
+        .update({ title, content, type })
         .eq('id', id)
         .select()
         .single()

@@ -24,19 +24,24 @@ export default function ItemCard({ item, onEdit, onDelete }: ItemCardProps) {
   }
 
   return (
-    <div className="group bg-white rounded-xl border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden min-h-[200px]">
-      {/* Header with tag and actions */}
-      <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
-          item.type === 'prompt' 
-            ? 'bg-blue-100 text-blue-800 border border-blue-300' 
-            : 'bg-purple-100 text-purple-800 border border-purple-300'
-        }`}>
-          {item.type === 'prompt' ? '💬 Prompt' : '📝 Rule'}
-        </span>
+    <div className="group bg-white rounded-xl border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden min-h-[300px]">
+      {/* Header with title, tag and actions */}
+      <div className="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="text-lg font-semibold text-gray-900 truncate pr-4">
+            {item.title || 'Untitled'}
+          </h3>
+          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold flex-shrink-0 ${
+            item.type === 'prompt' 
+              ? 'bg-blue-100 text-blue-800 border border-blue-300' 
+              : 'bg-purple-100 text-purple-800 border border-purple-300'
+          }`}>
+            {item.type === 'prompt' ? '💬 Prompt' : '📝 Rule'}
+          </span>
+        </div>
         
         {/* Action buttons - always visible for better UX */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-end space-x-2">
           <button
             onClick={handleCopy}
             className={`p-2 rounded-lg transition-all duration-200 ${
@@ -68,8 +73,8 @@ export default function ItemCard({ item, onEdit, onDelete }: ItemCardProps) {
       </div>
       
       {/* Code block content - larger and more spacious */}
-      <div className="p-6 bg-gray-900 text-gray-100 min-h-[120px] flex-1">
-        <pre className="font-mono text-base whitespace-pre-wrap break-words leading-relaxed text-green-400">
+      <div className="p-6 bg-gray-900 text-gray-100 min-h-[160px] flex-1">
+        <pre className="font-mono text-base whitespace-pre-wrap break-words leading-relaxed text-green-400 max-h-48 overflow-y-auto">
           {item.content}
         </pre>
       </div>
